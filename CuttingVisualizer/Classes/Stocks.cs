@@ -14,15 +14,7 @@
             UpdateMaxStockSizes();
         }
 
-        public Stock? this[int index]
-        {
-            get
-            {
-                if (stocks.Count > 0)
-                    if (index >= 0 && index < stocks.Count) return stocks[index]; else return null;
-                else return null;
-            }
-        }
+        public Stock? this[int index] => (index >= 0 && index < stocks.Count) ? stocks[index] : null;
 
         public int Count { get { return stocks.Count; } }
 
