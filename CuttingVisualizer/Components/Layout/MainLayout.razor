@@ -1,6 +1,83 @@
-﻿@inherits LayoutComponentBase
+﻿@using CuttingVisualizer.Services
+@inherits LayoutComponentBase
+@inject IJSRuntime JSRuntime
+@inject LayoutStateService LayoutState
+@implements IAsyncDisposable
 
-@Body
+<MudThemeProvider />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout Style="height: 100vh; display: flex; flex-direction: column;">
+    <!-- -->
+    <MudAppBar>
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        My Application
+    </MudAppBar>
+    <MudDrawer @bind-Open="@_drawerOpen">
+        <AppMenu />
+    </MudDrawer>
+    <MudMainContent Style="flex: 1; min-height: 0; overflow: auto;">
+        <div @ref="contentElement" style="height: 100%; width: 100%">
+            @Body
+        </div>
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    private ElementReference contentElement;
+    private IJSObjectReference? _jsModule;
+    private DotNetObjectReference<MainLayout>? _dotNetHelper;
+
+    bool _drawerOpen = true;
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _dotNetHelper = DotNetObjectReference.Create(this);
+            _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>(
+                "import",
+                "./Components/Layout/MainLayout.razor.js"); // Путь к вашему JS-файлу
+
+            await _jsModule.InvokeVoidAsync("initResizeObserver", contentElement, _dotNetHelper);
+        }
+    }
+
+    [JSInvokable]
+    public void UpdateContentSize(int width, int height)
+    {
+        LayoutState.UpdateSize(width, height);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        try
+        {
+            if (_jsModule is not null)
+            {
+                await _jsModule.InvokeVoidAsync("disposeResizeObserver")
+                    .ConfigureAwait(false);
+
+                await _jsModule.DisposeAsync();
+            }
+        }
+        catch (JSDisconnectedException)
+        {
+            // Игнорируем разрыв соединения
+        }
+        //finally
+        {
+            _dotNetHelper?.Dispose();
+        }
+    }
+}
 
 <div id="blazor-error-ui">
     An unhandled error has occurred.

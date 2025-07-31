@@ -1,0 +1,10 @@
+﻿@using CuttingVisualizer.Classes
+
+<svg>
+    <rect x="0" y="0" height="@Part.Height" width="@Part.Width" stroke="green" stroke-width="1" fill="lightgreen" />
+</svg>
+
+@code {
+    [Parameter, EditorRequired]
+    public Part Part { get; set; }
+}

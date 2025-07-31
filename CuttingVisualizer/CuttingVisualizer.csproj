@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -7,8 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Classes\" />
-    <Folder Include="Components\Shared\" />
+    <PackageReference Include="MudBlazor" Version="8.10.0" />
   </ItemGroup>
 
 </Project>

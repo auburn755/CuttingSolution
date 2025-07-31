@@ -1,0 +1,59 @@
+﻿@using CuttingVisualizer.Classes
+@using CuttingVisualizer.Services
+@inject LayoutStateService LayoutState
+@implements IDisposable
+
+@for (int i = 0; i < Stocks.Count; i++)
+{
+    <StockViewer StyleSize="@styleSizeStockViwer" Stock="@Stocks[i]" VBHeight="@Stocks.MaxStockHeight" VBWidth="@Stocks.MaxStockWidth" StockNum="@(i+1)" CustomCoordinateOrigin="StockViewer.CoordinateOrigin.BottomRight" />
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public Stocks Stocks { get; set; } // список макетов раскроев заготовок
+
+    private string? styleSizeStockViwer;    // строка со стилем для передачи размеров в компоненты <StockLayout>
+
+    protected override void OnInitialized()
+    {
+        LayoutState.OnSizeChanged += ResizeMudMainContent; // Подписываемся на изменения
+    }
+
+    public void Dispose()
+    {
+        LayoutState.OnSizeChanged -= ResizeMudMainContent; // Отписываемся при уничтожении
+    }
+
+    private void ResizeMudMainContent()
+    {
+        styleSizeStockViwer = CalculateSizeStockLayout();
+        StateHasChanged();
+    }
+
+    // вычисляет пропорции <MudMainContent> и максимальных размеров заготовок, создает строку содержащую стиль с размерами для передачи в <StockLayout>
+    private string CalculateSizeStockLayout()
+    {
+        double stockRatio;  //пропорция максимальной ширины и максимальной высоты заготовок
+        double mudMainContentRatio; //пропорция ширины и высоты <MudMainContent> в главном макете страницы
+        double widthStockLayout, heightStockLayout;
+
+        if (Stocks != null)
+        {
+            stockRatio = Stocks.MaxStockWidth / (double)Stocks.MaxStockHeight;
+            mudMainContentRatio = LayoutState.ContentWidth / LayoutState.ContentHeight;
+            if (mudMainContentRatio > stockRatio)
+            {
+                heightStockLayout = LayoutState.ContentHeight - 40;
+                widthStockLayout = heightStockLayout * stockRatio;
+            }
+            else
+            {
+                widthStockLayout = LayoutState.ContentWidth;
+                heightStockLayout = widthStockLayout / stockRatio;
+            }
+            return $"width: {(int)widthStockLayout}px; height: {(int)heightStockLayout}px; border: 1px solid red;";
+
+        }
+        else return string.Empty;
+    }
+}

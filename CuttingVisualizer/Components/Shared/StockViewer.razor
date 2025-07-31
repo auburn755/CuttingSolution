@@ -1,0 +1,80 @@
+﻿@using CuttingVisualizer.Classes
+
+<MudPaper Style="@StyleSize" Class="ma-10 pa-5">
+    <MudText>Лист: @StockNum. @Stock.Height x @Stock.Width</MudText>
+    <div style="flex: 1; overflow: hidden;">
+        <svg viewBox="0 0 @VBWidth @VBHeight" width="100%" height="100%" preserveAspectRatio="xMidYMid meet">
+            <defs>
+                <pattern id="hatch" patternUnits="userSpaceOnUse" width="30" height="30">
+                    <path d="M0,0 L30,30" stroke="#9ac4d0" stroke-width="1" />
+                </pattern>
+            </defs>
+            <rect x="0" y="0" width="@Stock.Width" height="@Stock.Height" fill="url(#hatch)"
+                  stroke="#4682b4"
+                  stroke-width="1" />
+            @for (int i = 0; i < Stock.Count; i++)
+            {
+                <g transform="translate(@TranslateX(Stock[i].X, Stock[i].Width), @TranslateY(Stock[i].Y, Stock[i].Height))">
+                    <PartViewer Part="@Stock[i]" />
+                </g>
+            }
+        </svg>
+    </div>
+</MudPaper>
+
+@code {
+
+    public enum CoordinateOrigin
+    {
+        TopLeft,
+        BottomLeft,
+        TopRight,
+        BottomRight
+    }
+
+    [Parameter, EditorRequired]
+    public string? StyleSize { get; set; }
+
+    [Parameter, EditorRequired]
+    public Stock Stock { get; set; }
+
+    [Parameter, EditorRequired]
+    public int VBWidth { get; set; }
+    [Parameter, EditorRequired]
+    public int VBHeight { get; set; }
+    [Parameter, EditorRequired]
+    public int StockNum { get; set; }
+    [Parameter, EditorRequired]
+    public CoordinateOrigin CustomCoordinateOrigin { get; set; }
+
+    private double TranslateX(double x, double width) //координата детали X и ширина детали
+    {
+        switch (CustomCoordinateOrigin)
+        {
+            case CoordinateOrigin.TopLeft:
+                return x;
+            case CoordinateOrigin.BottomLeft:
+                return x;
+            case CoordinateOrigin.TopRight:
+                return Stock.Width - x - width;
+            case CoordinateOrigin.BottomRight:
+                return Stock.Width - x - width;
+            default: return x;
+        }
+    }
+    private double TranslateY(double y, double height) // координата детали Y и высота детали
+    {
+        switch (CustomCoordinateOrigin)
+        {
+            case CoordinateOrigin.TopLeft:
+                return y;
+            case CoordinateOrigin.BottomLeft:
+                return Stock.Height - y - height;
+            case CoordinateOrigin.TopRight:
+                return y;
+            case CoordinateOrigin.BottomRight:
+                return Stock.Height - y - height;
+            default: return y;
+        }
+    }
+}
