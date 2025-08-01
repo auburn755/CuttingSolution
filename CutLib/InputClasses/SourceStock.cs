@@ -49,12 +49,5 @@ namespace CutLib.InputClasses
         }
         public double Area => Height * Width;
         public double UsableArea => GetRootStripSize().Height * GetRootStripSize().Width;
-        public bool TryReserve()
-        {
-            if (IsUnlimited) return true;
-            if (Used >= Count) return false;
-            //Used++;
-            return true;
-        }
     }
 }
