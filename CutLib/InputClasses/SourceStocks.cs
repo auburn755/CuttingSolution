@@ -1,68 +1,99 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CutLib.InternalClasses;
 
 namespace CutLib.InputClasses
 {
     internal class SourceStocks
     {
-        private readonly List<SourceStock> sourceStocks=new();
+        private SourceStock? baseStock; //хранение базового листа
+        private readonly List<SourceStock> offcuts=new();  //хранение обрезков
+        private int currentOffcutIndex = 0;
         public string? Material {  get; set; }
-        public SourceStock? this[int index]=>(index >=0 && index < sourceStocks.Count) ? sourceStocks[index]:null;
+
+        //  доступ к заготовкам по индексу. index == 0 - это основной лист, а index > 0 - обрезки 
+        public SourceStock? this[int index]
+        {
+            get
+            {
+                if (index == 0) { if (baseStock == null) return null; else return baseStock; }
+                if (index > 0 && index <= offcuts.Count)
+                {
+                    return offcuts[index - 1];
+                }
+                else return null;
+            }
+        }
+
+        //  добавление основного листа материала
         public bool AddStock(double height, double width, Trim trim)
         {
-            if (!IsBaseStockExists())
-            {
-                SourceStock stock = new SourceStock();
-                stock.Height = height;
-                stock.Width = width;
-                stock.Count = 0;
-                stock.IsUnlimited = true;
-                stock.Used = 0;
-                stock.Trim = trim;    
-                sourceStocks.Add(stock);
+            if (baseStock is null) 
+            {   
+                baseStock = new SourceStock();
+                baseStock.Height = height;
+                baseStock.Width = width;
+                baseStock.Count = 0;
+                //BaseStock.IsUnlimited = true;
+                baseStock.Used = 0;
+                baseStock.Trim = trim;    
                 return true;
             }
             return false;
         }
 
+        //  добавление обрезка материала
         public bool AddStock(double height, double width, Trim trim, int count)
         {
             SourceStock stock = new SourceStock();
             stock.Height = height;
             stock.Width = width;
             stock.Count = count;
-            stock.IsUnlimited = false;
+            //stock.IsUnlimited = false;
             stock.Used = 0;
             stock.Trim = trim;
-            sourceStocks.Add(stock);
+            offcuts.Add(stock);
             return true;
         }
-        private bool IsBaseStockExists()
-        {
-            foreach(SourceStock stock in sourceStocks) if (stock.Count==-1) return true;
-            return false;
-        }
+
+        //  удаление заготовок по индексу. index == 0 - это основной лист, а index > 0 - обрезки
         public bool RemoveStock(int index)
         {
-            if(index>=0  && index<sourceStocks.Count)
-            {
-                sourceStocks.RemoveAt(index);
-                return true;
-            }
+            if (index==0) { if (baseStock != null) { baseStock = null; return true; } else return false; }
+            if (index>0 && index<=offcuts.Count)
+            { offcuts.RemoveAt(index-1); return true; }
             else return false;
         }
-        public StripSize GetNextStripSize()
+
+        public void Reset()
         {
-            /*
-             * метод должен возвращать размер очередной заготовки для раскроя.
-             * варианты наличия заготовок: 
-             *          1.только базовый размер (т.е. целые листы);
-             *          2.один базовый размер и обрезки, в этом случае отдаются сначала обрезки, а потом целые листы
-             *          3.только обрезки.
-             */
+            if (baseStock !=null) baseStock.Used = 0;
+            foreach (SourceStock stock in offcuts) stock.Used = 0;
+        }
+        public Strip? GetRootStrip()
+        {
+            while (currentOffcutIndex < offcuts.Count)
+            {
+                if (offcuts[currentOffcutIndex].Used < offcuts[currentOffcutIndex].Count)
+                { 
+                    offcuts[currentOffcutIndex].Used++;
+                    Strip strip=new Strip();
+                    strip.Size = offcuts[currentOffcutIndex].GetRootStripSize();
+                    return strip;
+                }
+                else
+                {
+                    currentOffcutIndex++;
+                    continue;
+                }
+            }
+            if (baseStock != null)
+            {
+                baseStock.Used++;
+                Strip strip = new Strip();
+                strip.Size=baseStock.GetRootStripSize();
+                return strip;
+            }
+            else
+                return null;
         }
     }
 }

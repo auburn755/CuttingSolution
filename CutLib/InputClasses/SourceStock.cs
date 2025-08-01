@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CutLib.InternalClasses;
 
 namespace CutLib.InputClasses
 {
-    
     public struct Trim
     {
         public double Left;
@@ -35,21 +30,6 @@ namespace CutLib.InputClasses
             Bottom = trim;
         }
     }
-    public struct StripSize
-    {
-        public double Height;
-        public double Width;
-        public StripSize()
-        {
-            Height = 0;
-            Width = 0;
-        }
-        public StripSize(double height, double width)
-        {
-            Height = height;
-            Width = width;
-        }
-    }
 
     public class SourceStock
     {
@@ -59,16 +39,16 @@ namespace CutLib.InputClasses
         public int Used {  get; set; }
         public Trim Trim { get; set; }
         public bool IsUnlimited { get; set; }
-        public StripSize GetUsableSize()
+        public StripSize GetRootStripSize()
         {
             return new StripSize(Height-Trim.Top-Trim.Bottom, Width-Trim.Left-Trim.Right);    
         }
         public override string ToString()
         {
-            return $"Stock ({Width}×{Height}), usable: {GetUsableSize().Width}×{GetUsableSize().Height}, count: {Count}, used: {Used}";
+            return $"Stock ({Width}×{Height}), usable: {GetRootStripSize().Width}×{GetRootStripSize().Height}, count: {Count}, used: {Used}";
         }
         public double Area => Height * Width;
-        public double UsableArea => GetUsableSize().Height * GetUsableSize().Width;
+        public double UsableArea => GetRootStripSize().Height * GetRootStripSize().Width;
         public bool TryReserve()
         {
             if (IsUnlimited) return true;
