@@ -8,7 +8,7 @@ namespace CutLib.InputClasses
 {
     internal class SourceStocks
     {
-        List<SourceStock> sourceStocks=new();
+        private readonly List<SourceStock> sourceStocks=new();
         public string? Material {  get; set; }
         public SourceStock? this[int index]=>(index >=0 && index < sourceStocks.Count) ? sourceStocks[index]:null;
         public bool AddStock(double height, double width, Trim trim)
@@ -18,7 +18,8 @@ namespace CutLib.InputClasses
                 SourceStock stock = new SourceStock();
                 stock.Height = height;
                 stock.Width = width;
-                stock.Count = -1;
+                stock.Count = 0;
+                stock.IsUnlimited = true;
                 stock.Used = 0;
                 stock.Trim = trim;    
                 sourceStocks.Add(stock);
@@ -26,12 +27,14 @@ namespace CutLib.InputClasses
             }
             return false;
         }
+
         public bool AddStock(double height, double width, Trim trim, int count)
         {
             SourceStock stock = new SourceStock();
             stock.Height = height;
             stock.Width = width;
             stock.Count = count;
+            stock.IsUnlimited = false;
             stock.Used = 0;
             stock.Trim = trim;
             sourceStocks.Add(stock);

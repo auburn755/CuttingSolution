@@ -58,9 +58,23 @@ namespace CutLib.InputClasses
         public int Count { get; set; }
         public int Used {  get; set; }
         public Trim Trim { get; set; }
+        public bool IsUnlimited { get; set; }
         public StripSize GetUsableSize()
         {
             return new StripSize(Height-Trim.Top-Trim.Bottom, Width-Trim.Left-Trim.Right);    
+        }
+        public override string ToString()
+        {
+            return $"Stock ({Width}×{Height}), usable: {GetUsableSize().Width}×{GetUsableSize().Height}, count: {Count}, used: {Used}";
+        }
+        public double Area => Height * Width;
+        public double UsableArea => GetUsableSize().Height * GetUsableSize().Width;
+        public bool TryReserve()
+        {
+            if (IsUnlimited) return true;
+            if (Used >= Count) return false;
+            //Used++;
+            return true;
         }
     }
 }
