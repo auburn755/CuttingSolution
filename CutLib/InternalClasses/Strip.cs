@@ -15,9 +15,18 @@
             Width = width;
         }
     }
+    public enum StripDirection
+    {
+        Vertical,
+        Horizontal
+    }
 
     internal class Strip
     {
         public StripSize Size {  get; set; }
+        public Strip? LeftStrip { get; set; } = null;
+        public Strip? RightStrip { get; set; } = null;
+        public StripDirection Direction { get; set; }
+        public PlacedParts? PlacedParts { get; set; } = null;
     }
 }

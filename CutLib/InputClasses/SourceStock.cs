@@ -33,12 +33,17 @@ namespace CutLib.InputClasses
 
     public class SourceStock
     {
+        public Guid Id;
         public double Height { get; set; }
         public double Width { get; set; }
         public int Count { get; set; }
         public int Used {  get; set; }
         public Trim Trim { get; set; }
-        public bool IsUnlimited { get; set; }
+        public bool CanRotate { get; set; }
+        public SourceStock()
+        {
+            Id = Guid.NewGuid();
+        }
         public StripSize GetRootStripSize()
         {
             return new StripSize(Height-Trim.Top-Trim.Bottom, Width-Trim.Left-Trim.Right);    
