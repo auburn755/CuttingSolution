@@ -1,6 +1,6 @@
 ﻿namespace CutLib.InputClasses
 {
-    internal class CutSetting
+    internal class CutSettings
     {
         public double SawWidth { get; set; }        //ширина линии реза
         public double MaxCutLength { get; set; }    // максимально возможная длина разреза

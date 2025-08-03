@@ -4,7 +4,7 @@
     internal class Parts
     {
         private List<Part> parts=new List<Part>();
-        public void AddPart(int height, int width, int count, bool canRotate, string name="")
+        public void AddPart(double height, double width, int count, bool canRotate, string name="")
         {
             Part part=new Part();
             part.Height = height;
@@ -13,16 +13,24 @@
             part.CanRotate = canRotate;
             part.Name = name;
             part.Placed = 0;
-            part.TypeId = 0;
+            part.TypeNum = 0;
             parts.Add(part);
         }
+        public void DeletePart(Guid id)
+        {
+            var part=parts.Find(x => x.TypeId == id);
+            if (part != null) parts.Remove(part);
+        }
+        public int Count => parts.Count;
         public void Renumber()
         {
             for (int i=0; i<parts.Count; i++)
             {
                 parts[i].Reset();
-                parts[i].TypeId = i + 1;
+                parts[i].TypeNum = i + 1;
             }
         }
+        public bool HasUnplaced() => parts.Any(p => p.Placed < p.Count);
+
     }
 }

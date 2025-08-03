@@ -2,48 +2,17 @@
 
 namespace CutLib.InputClasses
 {
-    public struct Trim
-    {
-        public double Left;
-        public double Right;
-        public double Top;
-        public double Bottom;
-        public Trim()
-        {
-            Left = 0;
-            Right = 0;
-            Top = 0;
-            Bottom = 0;
-        }
-        public Trim(double left, double right, double top, double bottom)
-        {
-            Left = left;
-            Right = right;
-            Top = top;
-            Bottom = bottom;
-        }
-        public Trim(double trim)
-        {
-            Left = trim;
-            Right = trim;
-            Top = trim;
-            Bottom = trim;
-        }
-    }
+    
 
-    public class SourceStock
+    internal class SourceStock
     {
-        public Guid Id;
+        public Guid Id=Guid.NewGuid();
         public double Height { get; set; }
         public double Width { get; set; }
         public int Count { get; set; }
         public int Used {  get; set; }
         public Trim Trim { get; set; }
         public bool CanRotate { get; set; }
-        public SourceStock()
-        {
-            Id = Guid.NewGuid();
-        }
         public StripSize GetRootStripSize()
         {
             return new StripSize(Height-Trim.Top-Trim.Bottom, Width-Trim.Left-Trim.Right);    

@@ -1,4 +1,6 @@
-﻿namespace CutLib.InternalClasses
+﻿using CutLib.InputClasses;
+
+namespace CutLib.InternalClasses
 {
     public struct StripSize
     {
@@ -23,6 +25,7 @@
 
     internal class Strip
     {
+        internal SourceStock? SourceStock { get; set; } = null; //ссылка на исходную заготовку, пусть будет только в rootStrip, а ниже по дереву null
         public StripSize Size {  get; set; }
         public Strip? LeftStrip { get; set; } = null;
         public Strip? RightStrip { get; set; } = null;

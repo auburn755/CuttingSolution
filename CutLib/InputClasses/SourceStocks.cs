@@ -24,7 +24,7 @@ namespace CutLib.InputClasses
         }
 
         //  добавление основного листа материала
-        public bool AddStock(double height, double width, Trim trim)
+        public void AddStock(double height, double width, Trim trim)
         {
             if (baseStock is null) 
             {   
@@ -35,13 +35,11 @@ namespace CutLib.InputClasses
                 //BaseStock.IsUnlimited = true;
                 baseStock.Used = 0;
                 baseStock.Trim = trim;    
-                return true;
             }
-            return false;
         }
 
         //  добавление обрезка материала
-        public bool AddStock(double height, double width, Trim trim, int count)
+        public void AddStock(double height, double width, Trim trim, int count)
         {
             SourceStock stock = new SourceStock();
             stock.Height = height;
@@ -51,18 +49,18 @@ namespace CutLib.InputClasses
             stock.Used = 0;
             stock.Trim = trim;
             offcuts.Add(stock);
-            return true;
         }
 
-        //  удаление заготовок по индексу. index == 0 - это основной лист, а index > 0 - обрезки
-        public bool RemoveStock(int index)
+        //  удаление заготовки из списка обрезков по Id
+        public void RemoveOffcut(Guid id)
         {
-            if (index==0) { if (baseStock != null) { baseStock = null; return true; } else return false; }
-            if (index>0 && index<=offcuts.Count)
-            { offcuts.RemoveAt(index-1); return true; }
-            else return false;
+            var stock=offcuts.Find(x => x.Id == id);
+            if (stock != null) offcuts.Remove(stock);
         }
+        // удаление базового листа
+        public void RemoveBase()=>baseStock=null;
 
+        // подготовка к новому раскрою
         public void Reset()
         {
             if (baseStock !=null) baseStock.Used = 0;
@@ -77,6 +75,7 @@ namespace CutLib.InputClasses
                     offcuts[currentOffcutIndex].Used++;
                     Strip strip=new Strip();
                     strip.Size = offcuts[currentOffcutIndex].GetRootStripSize();
+                    strip.SourceStock=offcuts[currentOffcutIndex];
                     return strip;
                 }
                 else
@@ -90,6 +89,7 @@ namespace CutLib.InputClasses
                 baseStock.Used++;
                 Strip strip = new Strip();
                 strip.Size=baseStock.GetRootStripSize();
+                strip.SourceStock = baseStock;
                 return strip;
             }
             else
