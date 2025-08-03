@@ -38,7 +38,7 @@ namespace CutLib
     {
         private SourceStocks sourceStocks = new SourceStocks();
         private Parts parts = new Parts();
-        private CutSettings cutSetting = new CutSettings();
+        private CutSettings СutSetting = new CutSettings();
 
         public void AddPart(double height, double width, int count, bool canRotate = true, string name = "")
         {
@@ -47,28 +47,27 @@ namespace CutLib
         }
 
         public void AddStock(double height, double width, Trim trim, int count = 0)
-        {   // нужно добавить обработку ошибки, если AddStock false вернул
+        {   
             if (count == 0) sourceStocks.AddStock(height, width, trim); else sourceStocks.AddStock(width, height, trim, count);
         }
-
         public void SetMaxCutLength(double length)
         {
-            cutSetting.MaxCutLength = length;
+            СutSetting.MaxCutLength = length;
         }
 
         public void SetMaxSheetRotation(int count)
         {
-            cutSetting.MaxSheetRotation = count;
+            СutSetting.MaxSheetRotation = count;
         }
 
         public void SetMinWasteLength(double length)
         {
-            cutSetting.MinWasteLength = length;
+            СutSetting.MinWasteLength = length;
         }
 
         public void SetSawWidth(double width)
         {
-            cutSetting.SawWidth = width;
+            СutSetting.SawWidth = width;
         }        
         public CutResult Execute()
         {
@@ -81,13 +80,33 @@ namespace CutLib
             }
             return result;
         }
-        private CuttingLayout? ConvertStripToLayout(Strip rootStrip)
+
+        //транслировать дерево раскроя в координатный макет раскроя заготовки
+        private CuttingLayout TranslateTreeToLayout(Strip rootStrip) 
         {
-            CuttingLayout layout = new();
-            layout.sourseStock = rootStrip.SourceStock;
-            AddPlacedPartsRecursive(rootStrip, layout);
+            CuttingLayout layout = new CuttingLayout();
+            layout.SourseStock = rootStrip.SourceStock!;
+            //координаты корневой полосы на заготовке - это величина подрезки слева и снизу
+            double x = rootStrip.SourceStock!.Trim.Left;
+            double y = rootStrip.SourceStock!.Trim.Bottom;
+            TranslateStripToLayout(rootStrip, layout, x, y);
             return layout;
         }
+
+        // транслировать полосу в координатный макет раскроя заготовки. полоса расположена по координатам x,y
+        private void TranslateStripToLayout(Strip strip, CuttingLayout layout, double x, double y)
+        {
+            // есть размер полосы, есть начальные координаты полосы, есть направление полосы, значит можно вычислить CutLine
+            // определяем линию реза полосы
+            CutLineLayout cut;
+
+        }
+        
+
+
+
+
+
         private void AddPlacedPartsRecursive(Strip strip, CuttingLayout layout)
         {
             // здесь надо вычислить координаты полосы на заготовке

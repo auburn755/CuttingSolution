@@ -6,7 +6,7 @@ namespace CutLib.OutputClasses
     // макет карты раскроя, содержит детали и линии разреза
     public class CuttingLayout
     {   
-        internal SourceStock sourseStock { get; set; }
+        internal SourceStock SourseStock { get; set; }
         public PlacedPartsLayouts Parts {  get; set; }= new PlacedPartsLayouts();
         public CutsLines Cuts { get; set; } = new CutsLines();
         public int CountParts
@@ -19,8 +19,8 @@ namespace CutLib.OutputClasses
         }
         internal void AddPart(PlacedPartLayout part) => Parts.parts.Add(part);
         internal void AddCut(CutLineLayout cut)=>Cuts.cuts.Add(cut);
-        public double StockWidth => sourseStock.Width;
-        public double StockHeight=>sourseStock.Height;
+        public double StockWidth => SourseStock.Width;
+        public double StockHeight=>SourseStock.Height;
     }
     public class PlacedPartsLayouts: IEnumerable<PlacedPartLayout>
     {

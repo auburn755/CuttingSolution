@@ -12,12 +12,11 @@ namespace CutLib.InternalClasses
         public int Count => placedParts.Count;
         public void Add(Part part, bool isRotated)
         {
-            PlacedPart placedPart = new PlacedPart ();
-            placedPart.PartTypeId = part.TypeId;
-            placedPart.PartTypeNum = part.TypeNum;
+            PlacedPart placedPart = new PlacedPart ();  
+            placedPart.Part=part;                       // запомнить ссылку на родительский тип детали
             placedPart.IsRotated = isRotated;
-            part.Placed++;                          // отметить, что еще одна деталь размещена
-            placedPart.InstanceNum = part.Placed;    // присвоить данной размещенной детали дополнительный порядковый номер
+            part.Placed++;                              // отметить, что еще одна деталь размещена
+            placedPart.InstanceNum = part.Placed;       // присвоить данной размещенной детали дополнительный порядковый номер
         }
 
         public IEnumerator<PlacedPart> GetEnumerator()
