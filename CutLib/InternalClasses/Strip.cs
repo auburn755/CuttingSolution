@@ -17,7 +17,7 @@ namespace CutLib.InternalClasses
             Width = width;
         }
     }
-    public enum StripDirection
+    public enum CutDirection
     {
         Vertical,
         Horizontal
@@ -29,7 +29,7 @@ namespace CutLib.InternalClasses
         public StripSize Size {  get; set; }
         public Strip? LeftStrip { get; set; } = null;
         public Strip? RightStrip { get; set; } = null;
-        public StripDirection Direction { get; set; }
-        public PlacedParts? PlacedParts { get; set; } = null;
+        public CutDirection CutDirection { get; set; }
+        public PlacedParts PlacedParts { get; set; } = new();
     }
 }
