@@ -11,6 +11,11 @@ namespace CutLib
         public CutLibException(string message) : base(message) { }
     }
 
+    public class InvalidPartsListException:CutLibException
+    { 
+        public InvalidPartsListException(string message) : base(message) { }
+    }
+
     /* пример исключения
      * public class InvalidStockException : CutLibException
      *  {
