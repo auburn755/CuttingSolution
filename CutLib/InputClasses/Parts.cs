@@ -16,11 +16,6 @@
             part.TypeNum = 0;
             parts.Add(part);
         }
-        public void DeletePart(Guid id)
-        {
-            var part=parts.Find(x => x.TypeId == id);
-            if (part != null) parts.Remove(part);
-        }
         public int Count => parts.Count;
         public void Renumber()
         {
