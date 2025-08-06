@@ -1,31 +1,37 @@
-﻿namespace CutLib.InputClasses
+﻿using System.Collections;
+using System.ComponentModel;
+
+namespace CutLib.InputClasses
 {
     // входящий список деталей
-    internal class Parts
+    internal class Parts:IEnumerable<Part>
     {
-        private List<Part> parts=new List<Part>();
-        public void AddPart(double height, double width, int count, bool canRotate, string name="")
+        private readonly List<Part> parts=new();
+
+        public Part this[int index]
         {
-            Part part=new Part();
-            part.Height = height;
-            part.Width = width;
-            part.Count = count;
-            part.CanRotate = canRotate;
-            part.Name = name;
-            part.Placed = 0;
-            part.TypeNum = 0;
-            parts.Add(part);
-        }
-        public int Count => parts.Count;
-        public void Renumber()
-        {
-            for (int i=0; i<parts.Count; i++)
+            get
             {
-                parts[i].Reset();
-                parts[i].TypeNum = i + 1;
+                if (index < 0 || index >= parts.Count) throw new InvalidIndexRangeException("Неверный индекс Parts");
+                else return parts[index];
             }
+        }
+        public void Add(Part part) { this.parts.Add(part); }
+        public int Count => parts.Count;
+        public void Reset()
+        {
+            foreach (Part part in parts) part.Placed = 0;
         }
         public bool HasUnplaced() => parts.Any(p => p.Placed < p.Count);
 
+        public IEnumerator<Part> GetEnumerator()
+        {
+            return parts.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
     }
 }

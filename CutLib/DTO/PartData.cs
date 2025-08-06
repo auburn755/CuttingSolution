@@ -10,10 +10,16 @@ namespace CutLib.DTO
     public class PartData
     {
         public string Name { get; set; } = "";
+        /// <summary>
+        /// Номер детали для отчета или чертежей. Если не используется, детали будут нумероваться по порядку входящего списка.
+        /// </summary>
         public int Number { get; set; }
         public double Height { get; set; }
         public double Width { get; set; }
         public int Count { get; set; }
+        /// <summary>
+        /// true - поворот детали допускается
+        /// </summary>
         public bool CanRotate { get; set; }
     }
 }
