@@ -16,6 +16,10 @@ namespace CutLib
         public InvalidPartsListException(string message) : base(message) { }
     }
 
+    public class InvalidOffcutsListException : CutLibException
+    {
+        public InvalidOffcutsListException(string message) : base(message) { }
+    }
     public class InvalidIndexRangeException : CutLibException
     {
         public InvalidIndexRangeException(string message) : base(message) { }

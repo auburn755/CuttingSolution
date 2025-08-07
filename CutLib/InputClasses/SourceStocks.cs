@@ -37,7 +37,7 @@ namespace CutLib.InputClasses
                 baseStock.Trim = trim;    
             }
         }
-
+        
         //  добавление обрезка материала
         public void AddStock(double height, double width, Trim trim, int count)
         {
@@ -50,15 +50,6 @@ namespace CutLib.InputClasses
             stock.Trim = trim;
             offcuts.Add(stock);
         }
-
-        //  удаление заготовки из списка обрезков по Id
-        public void RemoveOffcut(Guid id)
-        {
-            var stock=offcuts.Find(x => x.Id == id);
-            if (stock != null) offcuts.Remove(stock);
-        }
-        // удаление базового листа
-        public void RemoveBase()=>baseStock=null;
 
         // подготовка к новому раскрою
         public void Reset()
@@ -94,6 +85,19 @@ namespace CutLib.InputClasses
             }
             else
                 return null;
+        }
+
+        // функция сравнения размера обрезка с базовым листом
+        public bool IsSizeOffcutExceeded(double height, double width)
+        {
+            if (baseStock != null)
+            {
+                if (height > baseStock.Height || width > baseStock.Width) return true; else return false;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

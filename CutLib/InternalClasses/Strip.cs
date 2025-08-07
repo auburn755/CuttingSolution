@@ -2,26 +2,6 @@
 
 namespace CutLib.InternalClasses
 {
-    internal struct StripSize
-    {
-        public double Height;
-        public double Width;
-        public StripSize()
-        {
-            Height = 0;
-            Width = 0;
-        }
-        public StripSize(double height, double width)
-        {
-            Height = height;
-            Width = width;
-        }
-    }
-    internal enum CutDirection
-    {
-        Vertical,
-        Horizontal
-    }
 
     internal class Strip
     {

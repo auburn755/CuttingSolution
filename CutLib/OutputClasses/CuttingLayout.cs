@@ -5,7 +5,7 @@ namespace CutLib.OutputClasses
 {
     // макет карты раскроя, содержит детали и линии разреза
     public class CuttingLayout
-    {   
+    {
         internal SourceStock SourseStock { get; set; }
         public PlacedPartsLayouts Parts {  get; set; }= new PlacedPartsLayouts();
         public CutsLines Cuts { get; set; } = new CutsLines();

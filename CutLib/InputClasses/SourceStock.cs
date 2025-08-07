@@ -1,9 +1,7 @@
 ﻿using CutLib.InternalClasses;
 
 namespace CutLib.InputClasses
-{
-    
-
+{ 
     internal class SourceStock
     {
         public Guid Id=Guid.NewGuid();
@@ -12,7 +10,7 @@ namespace CutLib.InputClasses
         public int Count { get; set; }
         public int Used {  get; set; }
         public Trim Trim { get; set; }
-        public bool CanRotate { get; set; }
+        public bool IsTexture { get; set; }
         public StripSize GetRootStripSize()
         {
             return new StripSize(Height-Trim.Top-Trim.Bottom, Width-Trim.Left-Trim.Right);    
