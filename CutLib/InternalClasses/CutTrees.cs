@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.ComponentModel.Design;
 
 namespace CutLib.InternalClasses
 {
@@ -6,10 +7,18 @@ namespace CutLib.InternalClasses
     {
         private List<Strip> cutTrees = new List<Strip>();
         public int Count
-        { 
+        {
             get { return cutTrees.Count; }
         }
-        public Strip? this[int index]=>(index>=0 && index<cutTrees.Count)?cutTrees[index]:null;
+        public Strip this[int index]
+        {
+            get
+            { 
+                if (index< 0 || index >= cutTrees.Count) throw new InvalidIndexRangeException("Неверный индекс для CutTrees");
+                else return cutTrees[index];
+            }
+        }
+         
         public void AddTree(Strip rootStrip)
         {
             cutTrees.Add(rootStrip);

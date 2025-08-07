@@ -24,4 +24,8 @@ namespace CutLib
     {
         public InvalidIndexRangeException(string message) : base(message) { }
     }
+    public class CuttingNotCompletedException : CutLibException
+    {
+        public CuttingNotCompletedException(string message) : base(message) { }
+    }
 }

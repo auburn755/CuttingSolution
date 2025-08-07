@@ -13,7 +13,7 @@ namespace CutLib
         private CutSettings settings = new CutSettings();
         public CutResult Execute()
         {
-            Solver solver =new Solver(parts, sourceStocks);
+            Solver solver = new Solver(parts, sourceStocks, settings);
             CutTrees cutTrees = solver.Run();
             CutResult result = new CutResult() { Material = sourceStocks.Material };
             foreach (Strip rootStrip in cutTrees)

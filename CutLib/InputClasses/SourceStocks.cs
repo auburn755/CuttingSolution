@@ -2,6 +2,8 @@
 
 namespace CutLib.InputClasses
 {
+    // надо сделать внутренний список Offcuts и не заморачиваться с общим списком с базовым листом
+    // материал заменить на класс материал
     internal class SourceStocks
     {
         private SourceStock? baseStock; //хранение базового листа
@@ -14,6 +16,11 @@ namespace CutLib.InputClasses
         {
             get
             {
+
+
+
+
+
                 if (index == 0) { if (baseStock == null) return null; else return baseStock; }
                 if (index > 0 && index <= offcuts.Count)
                 {
