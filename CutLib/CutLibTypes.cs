@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace CutLib
 {
-    public struct Trim
+    // дополнительные типы библиотеки
+
+    internal struct Trim
     {
         public double Left;
         public double Right;
@@ -55,6 +57,4 @@ namespace CutLib
         Vertical,
         Horizontal
     }
-
-
 }

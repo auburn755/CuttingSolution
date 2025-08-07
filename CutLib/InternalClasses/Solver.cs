@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace CutLib.InternalClasses
 {
+    // решение задачи раскроя
     internal class Solver
     {
         private Parts parts;

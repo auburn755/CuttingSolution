@@ -24,15 +24,4 @@ namespace CutLib
     {
         public InvalidIndexRangeException(string message) : base(message) { }
     }
-
-    /* пример исключения
-     * public class InvalidStockException : CutLibException
-     *  {
-     *  public InvalidStockException(string message) : base(message) { }
-     *  }
-     *  
-     *  пример вызова исключения в библиотеке
-     *  if (stock.Width > baseStock.Width || stock.Height > baseStock.Height)
-     *  throw new InvalidStockException("Обрезок превышает базовый лист по размеру.");
-    */
 }

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace CutLib
 {
+    // методы преобразования деревьев раскроя в координатные макеты раскроя
     public partial class CutEngine
     {
         //транслировать дерево раскроя в координатный макет раскроя заготовки

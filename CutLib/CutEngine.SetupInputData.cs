@@ -2,6 +2,7 @@
 using CutLib.InputClasses;
 namespace CutLib
 {
+    // методы задания входящих данных
     public partial class CutEngine
     {
         /// <summary>
