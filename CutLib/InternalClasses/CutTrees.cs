@@ -14,14 +14,14 @@ namespace CutLib.InternalClasses
         {
             get
             { 
-                if (index< 0 || index >= cutTrees.Count) throw new InvalidIndexRangeException("Неверный индекс для CutTrees");
+                if (index< 0 || index >= cutTrees.Count) throw new CutLibInvalidIndexRangeException("Неверный индекс для CutTrees");
                 else return cutTrees[index];
             }
         }
          
-        public void AddTree(Strip rootStrip)
+        public void AddTree(Strip cutTree)
         {
-            cutTrees.Add(rootStrip);
+            cutTrees.Add(cutTree);
         }
         public IEnumerator<Strip> GetEnumerator()
         {

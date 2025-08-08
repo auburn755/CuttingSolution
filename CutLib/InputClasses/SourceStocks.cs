@@ -1,4 +1,5 @@
 ﻿using CutLib.InternalClasses;
+using System.Collections;
 
 namespace CutLib.InputClasses
 {
@@ -6,100 +7,79 @@ namespace CutLib.InputClasses
     // материал заменить на класс материал
     internal class SourceStocks
     {
-        private SourceStock? baseStock; //хранение базового листа
-        private readonly List<SourceStock> offcuts=new();  //хранение обрезков
-        private int currentOffcutIndex = 0;
-        public string? Material {  get; set; }
-
-        //  доступ к заготовкам по индексу. index == 0 - это основной лист, а index > 0 - обрезки 
-        public SourceStock? this[int index]
+        private List<SourceStock>? offcuts;
+        private SourceStock? baseSourceStock;
+        private int currentOffcutIndex = 0;                 // индекс текущего обрезка, выбранного для раскроя
+        internal SourceMaterial? Material {  get; set; }
+        public void SetBaseStock(double height, double width, Trim trim)
         {
-            get
-            {
-
-
-
-
-
-                if (index == 0) { if (baseStock == null) return null; else return baseStock; }
-                if (index > 0 && index <= offcuts.Count)
-                {
-                    return offcuts[index - 1];
-                }
-                else return null;
-            }
+            if (baseSourceStock == null) baseSourceStock = new SourceStock();
+            baseSourceStock.Height = height;
+            baseSourceStock.Width = width;
+            baseSourceStock.Trim = trim;
         }
-
-        //  добавление основного листа материала
-        public void AddStock(double height, double width, Trim trim)
+        public void AddOffcut(double height, double width, Trim trim, int count)
         {
-            if (baseStock is null) 
-            {   
-                baseStock = new SourceStock();
-                baseStock.Height = height;
-                baseStock.Width = width;
-                baseStock.Count = 0;
-                //BaseStock.IsUnlimited = true;
-                baseStock.Used = 0;
-                baseStock.Trim = trim;    
-            }
+            if (offcuts == null) offcuts = new List<SourceStock>();
+            SourceStock offcut = new();
+            offcut.Height = height;
+            offcut.Width = width;
+            offcut.Trim = trim;
+            offcut.Count = count;
+            offcuts.Add(offcut);
         }
-        
-        //  добавление обрезка материала
-        public void AddStock(double height, double width, Trim trim, int count)
+        public void SetMaterial(string name)
         {
-            SourceStock stock = new SourceStock();
-            stock.Height = height;
-            stock.Width = width;
-            stock.Count = count;
-            //stock.IsUnlimited = false;
-            stock.Used = 0;
-            stock.Trim = trim;
-            offcuts.Add(stock);
+            if (Material == null) Material = new SourceMaterial();
+            Material.Name = name;
         }
-
-        // подготовка к новому раскрою
-        public void Reset()
+        public void PrepareForCutting()
         {
-            if (baseStock !=null) baseStock.Used = 0;
-            foreach (SourceStock stock in offcuts) stock.Used = 0;
+            if (offcuts is null && baseSourceStock is null) throw new CutLibInvalidStocksException("Объекты Stocks не заданы.");
+            if (baseSourceStock != null) baseSourceStock.Used = 0;
+            if (offcuts != null)
+                foreach (SourceStock offcut in offcuts) offcut.Used = 0;
+            currentOffcutIndex = 0;
         }
         public Strip? GetRootStrip()
         {
-            while (currentOffcutIndex < offcuts.Count)
+            if (baseSourceStock is null && offcuts is null) throw new CutLibInvalidStocksException("Объекты Stocks не заданы.");
+            if (offcuts != null)
             {
-                if (offcuts[currentOffcutIndex].Used < offcuts[currentOffcutIndex].Count)
-                { 
-                    offcuts[currentOffcutIndex].Used++;
-                    Strip strip=new Strip();
-                    strip.Size = offcuts[currentOffcutIndex].GetRootStripSize();
-                    strip.SourceStock=offcuts[currentOffcutIndex];
-                    return strip;
-                }
-                else
+                while (currentOffcutIndex < offcuts.Count)
                 {
-                    currentOffcutIndex++;
-                    continue;
+                    if (offcuts[currentOffcutIndex].Used < offcuts[currentOffcutIndex].Count)
+                    {
+                        offcuts[currentOffcutIndex].Used++;
+                        Strip strip = new Strip();
+                        strip.Size = offcuts[currentOffcutIndex].GetRootStripSize();
+                        strip.SourceStock = offcuts[currentOffcutIndex];
+                        return strip;
+                    }
+                    else
+                    {
+                        currentOffcutIndex++;
+                        continue;
+                    }
                 }
             }
-            if (baseStock != null)
+            if (baseSourceStock != null)
             {
-                baseStock.Used++;
+                baseSourceStock.Used++;
                 Strip strip = new Strip();
-                strip.Size=baseStock.GetRootStripSize();
-                strip.SourceStock = baseStock;
+                strip.Size=baseSourceStock.GetRootStripSize();
+                strip.SourceStock = baseSourceStock;
                 return strip;
             }
             else
                 return null;
         }
-
         // функция сравнения размера обрезка с базовым листом
         public bool IsSizeOffcutExceeded(double height, double width)
         {
-            if (baseStock != null)
+            if (baseSourceStock != null)
             {
-                if (height > baseStock.Height || width > baseStock.Width) return true; else return false;
+                if (height > baseSourceStock.Height || width > baseSourceStock.Width) return true; else return false;
             }
             else
             {

@@ -12,7 +12,7 @@ namespace CutLib
         /// false - используется PartData.Number</param>
         public void AddParts(List<PartData> Parts, bool ListNumbering = true)
         {
-            if (Parts == null || Parts.Count == 0) throw new InvalidPartsListException("Входящий список Parts пуст.");
+            if (Parts == null || Parts.Count == 0) throw new CutLibInvalidPartsException("Входящий список Parts пуст.");
             Part part;
             int typeNum = 0;
             foreach (var inputPart in Parts)
@@ -42,7 +42,7 @@ namespace CutLib
         /// </summary>
         public void SetBaseStock(StockData BaseStock)
         {
-            sourceStocks.AddStock(BaseStock.Height, BaseStock.Width, new Trim(BaseStock.TrimLeft, BaseStock.TrimRight, BaseStock.TrimTop, BaseStock.TrimBottom));
+            sourceStocks.SetBaseStock(BaseStock.Height, BaseStock.Width, new Trim(BaseStock.TrimLeft, BaseStock.TrimRight, BaseStock.TrimTop, BaseStock.TrimBottom));
         }
 
         /// <summary>
@@ -50,11 +50,11 @@ namespace CutLib
         /// </summary>
         public void AddOffcuts(List<StockData> Offcuts)
         {
-            if (Offcuts == null || Offcuts.Count == 0) throw new InvalidOffcutsListException("Входящий список Offcuts пуст.");
+            if (Offcuts == null || Offcuts.Count == 0) throw new CutLibInvalidStocksException("Входящий список Offcuts пуст.");
             foreach (var Offcut in Offcuts)
             {
-                if (sourceStocks.IsSizeOffcutExceeded(Offcut.Height, Offcut.Width)) throw new InvalidOffcutsListException("Размер обрезка превышает размер листа.");
-                sourceStocks.AddStock(Offcut.Height, Offcut.Width, new Trim(Offcut.TrimLeft, Offcut.TrimRight, Offcut.TrimTop, Offcut.TrimBottom), Offcut.Count);
+                if (sourceStocks.IsSizeOffcutExceeded(Offcut.Height, Offcut.Width)) throw new CutLibInvalidStocksException("Размер обрезка превышает размер листа.");
+                sourceStocks.AddOffcut(Offcut.Height, Offcut.Width, new Trim(Offcut.TrimLeft, Offcut.TrimRight, Offcut.TrimTop, Offcut.TrimBottom), Offcut.Count);
             }
         }
 
@@ -63,7 +63,7 @@ namespace CutLib
         /// </summary>
         public void SetMaterial(MaterialData Material)
         {
-            sourceStocks.Material = Material.Name;
+            sourceStocks.SetMaterial(Material.Name);
         }
 
         /// <summary>

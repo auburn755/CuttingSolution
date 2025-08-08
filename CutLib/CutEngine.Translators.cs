@@ -12,14 +12,14 @@ namespace CutLib
     public partial class CutEngine
     {
         //транслировать дерево раскроя в координатный макет раскроя заготовки
-        private CuttingLayout TranslateTreeToLayout(Strip rootStrip)
+        private CuttingLayout TranslateTreeToLayout(Strip cutTree)
         {
             CuttingLayout layout = new CuttingLayout();
-            layout.SourseStock = rootStrip.SourceStock!;
+            layout.SourseStock = cutTree.SourceStock!;
             //координаты корневой полосы на заготовке - это величина подрезки слева и снизу
-            double x = rootStrip.SourceStock!.Trim.Left;
-            double y = rootStrip.SourceStock!.Trim.Bottom;
-            TranslateStripToLayout(rootStrip, layout, x, y);
+            double x = cutTree.SourceStock!.Trim.Left;
+            double y = cutTree.SourceStock!.Trim.Bottom;
+            TranslateStripToLayout(cutTree, layout, x, y);
             return layout;
         }
 
