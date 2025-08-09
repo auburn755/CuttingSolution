@@ -13,10 +13,10 @@ namespace CutLib.InputClasses
         internal SourceMaterial? Material {  get; set; }
         public void SetBaseStock(double height, double width, Trim trim)
         {
-            if (baseSourceStock == null) baseSourceStock = new SourceStock();
-            baseSourceStock.Height = height;
-            baseSourceStock.Width = width;
-            baseSourceStock.Trim = trim;
+                if (baseSourceStock == null) baseSourceStock = new SourceStock();
+                baseSourceStock.Height = height;
+                baseSourceStock.Width = width;
+                baseSourceStock.Trim = trim;
         }
         public void AddOffcut(double height, double width, Trim trim, int count)
         {
