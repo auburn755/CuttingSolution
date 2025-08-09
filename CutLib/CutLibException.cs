@@ -10,13 +10,25 @@ namespace CutLib
     {
         public CutLibException(string message) : base(message) { }
     }
-    public class CutLibInvalidPartsException:CutLibException
+    public class CutLibInvalidPartsException:CutLibException                    
     { 
         public CutLibInvalidPartsException(string message) : base(message) { }
     }
     public class CutLibInvalidStocksException : CutLibException
     {
         public CutLibInvalidStocksException(string message) : base(message) { }
+    }
+    public class CutLibInvalidSettingsException : CutLibException
+    {
+        public CutLibInvalidSettingsException(string message) : base(message) { }
+    }
+    public class CutLibInvalidMaterialException : CutLibException
+    {
+        public CutLibInvalidMaterialException(string message) : base(message) { }
+    }
+    public class CutLibNotDataForCuttingException : CutLibException
+    {
+        public CutLibNotDataForCuttingException(string message) : base(message) { }
     }
     public class CutLibInvalidIndexRangeException : CutLibException
     {

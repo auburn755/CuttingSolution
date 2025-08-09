@@ -12,7 +12,7 @@ namespace CutLib
         /// false - используется PartData.Number</param>
         public void AddParts(List<PartData> Parts, bool ListNumbering = true)
         {
-            if (Parts == null || Parts.Count == 0) throw new CutLibInvalidPartsException("Входящий список Parts пуст.");
+            if (Parts is null || Parts.Count == 0) throw new CutLibInvalidPartsException("Входящий список Parts = null или пуст.");
             Part part;
             int typeNum = 0;
             foreach (var inputPart in Parts)
@@ -46,6 +46,7 @@ namespace CutLib
         /// </summary>
         public void SetBaseStock(StockData BaseStock)
         {
+            if (BaseStock is null) throw new CutLibInvalidStocksException("BaseStock = null");
             if (BaseStock.Height > 0 && BaseStock.Width > 0)
             {
                 sourceStocks.SetBaseStock(BaseStock.Height, BaseStock.Width, new Trim(BaseStock.TrimLeft, BaseStock.TrimRight, BaseStock.TrimTop, BaseStock.TrimBottom));
@@ -58,12 +59,12 @@ namespace CutLib
         /// </summary>
         public void AddOffcuts(List<StockData> Offcuts)
         {
-            if (Offcuts == null || Offcuts.Count == 0) throw new CutLibInvalidStocksException("Входящий список Offcuts пуст.");
+            if (Offcuts is null || Offcuts.Count == 0) throw new CutLibInvalidStocksException("Входящий список Offcuts = null или пуст.");
             foreach (var Offcut in Offcuts)
             {
                 if (Offcut.Height > 0 && Offcut.Width > 0 && Offcut.Count > 0)
                 {
-                    if (sourceStocks.IsSizeOffcutExceeded(Offcut.Height, Offcut.Width)) throw new CutLibInvalidStocksException("Размер обрезка превышает размер листа.");
+                    if (sourceStocks.IsSizeOffcutExceeded(Offcut.Height, Offcut.Width)) throw new CutLibInvalidStocksException("Размер обрезка превышает размер основного листа.");
                     sourceStocks.AddOffcut(Offcut.Height, Offcut.Width, new Trim(Offcut.TrimLeft, Offcut.TrimRight, Offcut.TrimTop, Offcut.TrimBottom), Offcut.Count);
                 }
                 else throw new CutLibInvalidStocksException("Один из обрезков в Offcuts, имеет некорректные размеры или количество.");
@@ -75,7 +76,8 @@ namespace CutLib
         /// </summary>
         public void SetMaterial(MaterialData Material)
         {
-            sourceStocks.SetMaterial(Material.Name);
+            if (Material is null) throw new CutLibInvalidMaterialException("Material = null");
+            material.Name = Material.Name; 
         }
 
         /// <summary>
@@ -83,10 +85,10 @@ namespace CutLib
         /// </summary>
         public void SetCutSettings(CutSettingsData CutSettings)
         {
-            settings.SawWidth=CutSettings.SawWidth;
-            settings.MaxCutLength=CutSettings.MaxCutLength;
-            settings.MaxSheetRotation=CutSettings.MaxSheetRotation;
-            settings.MinWasteLength=CutSettings.MinWasteLength;
+            settings.SawWidth = CutSettings.SawWidth;
+            settings.MaxCutLength = CutSettings.MaxCutLength;
+            settings.MaxSheetRotation = CutSettings.MaxSheetRotation;
+            settings.MinWasteLength = CutSettings.MinWasteLength;
         }
     }
 }

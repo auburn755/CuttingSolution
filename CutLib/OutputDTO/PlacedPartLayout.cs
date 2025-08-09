@@ -7,13 +7,13 @@ namespace CutLib.OutputClasses
     {
         internal PlacedPartLayout(Part part)
         {
-            Part = part;
+            this.part = part;
             Name = part.Name;
             Width = part.Width;
             Height = part.Height;
             TypeNum = part.TypeNum;
         }
-        internal Part Part { get; set; }
+        internal Part part { get; set; }
         public string? Name { get; set; }
         public double Width { get; set; }
         public double Height { get; set; }

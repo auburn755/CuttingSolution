@@ -15,16 +15,16 @@ namespace CutLib.InternalClasses
             this.stocks = stocks;
             this.settings = settings;
         }
-        public CutTrees Run()               // выполнить расчет
+        public CutTrees Run()                                   // выполнить расчет
         {
-            parts.PrepareForCutting();      // сбросить счетчики размещенных деталей
-            stocks.PrepareForCutting();     // сбросить счетчики использованных заготовок
-            while (parts.HasUnplaced())     // пока есть неразмещенные детали
+            while (parts.HasUnplaced())                         // пока есть неразмещенные детали
             {
-                var rootStrip=stocks.GetRootStrip();            // берем для раскроя очередную заготовку 
-                if (rootStrip == null) throw new CutLibCuttingNotCompletedException("Не удалось разместить все детали на представленных заготовках."); // надо сделать, чтобы пользователю был представлен список неразмещенных деталей
-                BuildBranches(rootStrip);                       // строим для заготовки дерево раскроя, начиная с ее корневой полосы rootStrip
-                cutTrees.AddTree(rootStrip);                    // сохраняем построенное дерево в список деревьев
+                var cutTree=stocks.GetRootStrip();              // берем для раскроя очередную заготовку 
+                
+                if (cutTree == null) throw new CutLibCuttingNotCompletedException("Не удалось разместить все детали на представленных заготовках."); // надо сделать, чтобы пользователю был представлен список неразмещенных деталей
+                
+                BuildBranches(cutTree);                         // строим для заготовки дерево раскроя, начиная с ее корневой полосы rootStrip
+                cutTrees.AddTree(cutTree);                      // сохраняем очередное построенное дерево в список деревьев
             }                                                   // продолжаем цикл, пока не закончатся детали или обрезки, если нет базового листа
             return cutTrees;
         }

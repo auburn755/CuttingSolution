@@ -3,6 +3,9 @@ using System.ComponentModel.Design;
 
 namespace CutLib.InternalClasses
 {
+    // класс содержит результат раскроя в виде деревьев для каждой заготовки
+    // дерево представляет объект Strip - корневая полоса исходной заготовки
+    // в корневой полосе содержится ссылка на исходную заготовку
     internal class CutTrees : IEnumerable<Strip>
     {
         private List<Strip> cutTrees = new List<Strip>();

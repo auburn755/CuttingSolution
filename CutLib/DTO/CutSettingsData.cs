@@ -8,8 +8,8 @@ namespace CutLib.DTO
 {
     public class CutSettingsData
     {
-        public double SawWidth { get; set; }
-        public double MaxCutLength { get; set; }
+        public double SawWidth { get; set; } = 0;
+        public double MaxCutLength { get; set; } = 0;
         public int MaxSheetRotation { get; set; } = 0;
         public double MinWasteLength { get; set; } = 0;
     }

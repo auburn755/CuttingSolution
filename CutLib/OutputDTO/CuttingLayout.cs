@@ -1,12 +1,13 @@
 ﻿using CutLib.InputClasses;
 using System.Collections;
+using System.ComponentModel.DataAnnotations;
 
 namespace CutLib.OutputClasses
 {
     // макет карты раскроя, содержит детали и линии разреза
     public class CuttingLayout
     {
-        internal SourceStock SourseStock { get; set; }      // ссылка на исходную заготовку
+        internal SourceStock? sourseStock { get; set; }      // ссылка на исходную заготовку
         public PlacedPartsLayouts Parts {  get; set; }= new PlacedPartsLayouts();
         public CutsLines Cuts { get; set; } = new CutsLines();
         public int CountParts
@@ -19,13 +20,29 @@ namespace CutLib.OutputClasses
         }
         internal void AddPart(PlacedPartLayout part) => Parts.parts.Add(part);
         internal void AddCut(CutLineLayout cut)=>Cuts.cuts.Add(cut);
-        public double StockWidth => SourseStock.Width;
-        public double StockHeight=>SourseStock.Height;
+        public double StockWidth => sourseStock!.Width;
+        public double StockHeight=>sourseStock!.Height;
+        public double LengthAllCuts
+        {
+            get
+            {
+                double length=0;
+                foreach (CutLineLayout cut in Cuts.cuts) { length += cut.Length; }
+                return length;
+            }
+        }
     }
     public class PlacedPartsLayouts: IEnumerable<PlacedPartLayout>
     {
         internal List<PlacedPartLayout> parts = new();
-        public PlacedPartLayout? this[int index]=>(index>=0 && index<parts.Count)?parts[index]:null;
+        public PlacedPartLayout this[int index]
+        {
+            get
+            {
+                if (index < 0 || index >= parts.Count) throw new CutLibInvalidIndexRangeException("Неверный индекс Parts.");
+                return parts[index];
+            }
+        }
         
         public IEnumerator<PlacedPartLayout> GetEnumerator()
         {
@@ -40,7 +57,14 @@ namespace CutLib.OutputClasses
     public class CutsLines:IEnumerable<CutLineLayout>
     {
         internal List<CutLineLayout> cuts = new();
-        public CutLineLayout? this[int index]=>(index>=0 && index<cuts.Count)?cuts[index]:null;
+        public CutLineLayout? this[int index]  //=>(index>=0 && index<cuts.Count)?cuts[index]:null;
+        {
+            get
+            {
+                if (index < 0 || index >= cuts.Count) throw new CutLibInvalidIndexRangeException("Неверный индекс Cuts.");
+                return cuts[index];
+            }
+        }
 
         public IEnumerator<CutLineLayout> GetEnumerator()
         {

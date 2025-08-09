@@ -13,5 +13,14 @@ namespace CutLib.OutputClasses
         public double Y1 { get; set; }
         public double X2 { get; set; }
         public double Y2 { get; set; }
+        public double Length
+        {
+            get
+            {
+                if (X1 == X2) return (Y2 - Y1);     // если линия реза вертикальная
+                if (Y1==Y2) return (X2 - X1);       // если линия реза горизонтальная
+                return 0;
+            }
+        }
     }
 }

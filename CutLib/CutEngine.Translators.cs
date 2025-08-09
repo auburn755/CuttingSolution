@@ -15,7 +15,7 @@ namespace CutLib
         private CuttingLayout TranslateTreeToLayout(Strip cutTree)
         {
             CuttingLayout layout = new CuttingLayout();
-            layout.SourseStock = cutTree.SourceStock!;
+            layout.sourseStock = cutTree.SourceStock!;
             //координаты корневой полосы на заготовке - это величина подрезки слева и снизу
             double x = cutTree.SourceStock!.Trim.Left;
             double y = cutTree.SourceStock!.Trim.Bottom;

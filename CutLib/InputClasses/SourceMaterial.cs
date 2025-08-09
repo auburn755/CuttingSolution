@@ -1,6 +1,6 @@
 ﻿namespace CutLib.InputClasses
 {
-    public class SourceMaterial
+    internal class SourceMaterial
     {
         public string Name { get; set; } = "";
     }

@@ -1,4 +1,5 @@
-﻿using CutLib.InternalClasses;
+﻿using CutLib.DTO;
+using CutLib.InternalClasses;
 using System.Collections;
 
 namespace CutLib.InputClasses
@@ -7,18 +8,17 @@ namespace CutLib.InputClasses
     // материал заменить на класс материал
     internal class SourceStocks
     {
-        private List<SourceStock>? offcuts;
-        private SourceStock? baseSourceStock;
+        private List<SourceStock>? offcuts;     // список обрезков для раскроя
+        private SourceStock? baseSourceStock;   // базовый лист
         private int currentOffcutIndex = 0;                 // индекс текущего обрезка, выбранного для раскроя
-        internal SourceMaterial? Material {  get; set; }
-        public void SetBaseStock(double height, double width, Trim trim)
+        public void SetBaseStock(double height, double width, Trim trim)    // задать базовый размер листа
         {
                 if (baseSourceStock == null) baseSourceStock = new SourceStock();
                 baseSourceStock.Height = height;
                 baseSourceStock.Width = width;
                 baseSourceStock.Trim = trim;
         }
-        public void AddOffcut(double height, double width, Trim trim, int count)
+        public void AddOffcut(double height, double width, Trim trim, int count)    // добавить обрезок
         {
             if (offcuts == null) offcuts = new List<SourceStock>();
             SourceStock offcut = new();
@@ -28,20 +28,24 @@ namespace CutLib.InputClasses
             offcut.Count = count;
             offcuts.Add(offcut);
         }
-        public void SetMaterial(string name)
+        
+        public void PrepareForCutting()     // подготовиться к очередному раскрою - обнулить счетчики использованных заготовок
         {
-            if (Material == null) Material = new SourceMaterial();
-            Material.Name = name;
-        }
-        public void PrepareForCutting()
-        {
-            if (offcuts is null && baseSourceStock is null) throw new CutLibInvalidStocksException("Объекты Stocks не заданы.");
             if (baseSourceStock != null) baseSourceStock.Used = 0;
             if (offcuts != null)
                 foreach (SourceStock offcut in offcuts) offcut.Used = 0;
             currentOffcutIndex = 0;
         }
-        public Strip? GetRootStrip()
+
+        public bool HasStocks()     // проверить, что исходные заготовки заданы
+        {
+            if (baseSourceStock != null) return true;
+
+            else if (offcuts != null && offcuts.Count > 0) return true;
+
+            return false;
+        }
+        public Strip? GetRootStrip()    // выдать очередную заготовку для раскроя. Null может быть, только если для раскроя заданы только обрезки и они закончились
         {
             if (baseSourceStock is null && offcuts is null) throw new CutLibInvalidStocksException("Объекты Stocks не заданы.");
             if (offcuts != null)
@@ -74,8 +78,8 @@ namespace CutLib.InputClasses
             else
                 return null;
         }
-        // функция сравнения размера обрезка с базовым листом
-        public bool IsSizeOffcutExceeded(double height, double width)
+        
+        public bool IsSizeOffcutExceeded(double height, double width)   // сравнить размер обрезка height*width с размером базового листа
         {
             if (baseSourceStock != null)
             {
